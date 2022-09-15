@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    overflow: hidden;
+}
+img{
+    /* z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; */
+    display: none;
+}
+h1{
+    color: white;
+    font-size: 100px;
+    z-index: 5;
+    position: absolute;
+    top: 0px;
+    right: 20px;
+}
+h2{
+    position: absolute;
+    color: white;
+    right: 15%;
+    top: 10%;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 40px;
+}
