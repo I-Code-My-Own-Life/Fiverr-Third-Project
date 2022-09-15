@@ -6,6 +6,10 @@ let background = new Image();
 background.src = "bg6.jpg";
 let playeridle = new Image();
 playeridle.src = "playeridle.png"
+let playerjump = new Image();
+playerjump.src = "playerjump.png"
+let playerrun = new Image();
+playerrun.src = "playerrun.png"
 let gameFrame = 0;
 let frameX = 0;
 let frameY = 0;
@@ -31,12 +35,12 @@ class Player {
         this.draw()
         this.y += this.dy;
         this.x += this.dx;
-        if(this.y + this.height < 150 ){
+
+        if (this.y + this.height < 150) {
             keys.arrowUp.pressed = false
             this.dy = 0;
         }
-        if (this.y + this.height > innerHeight - 160) {
-            // location.href = "gamover.html"
+        if (this.y + this.height > innerHeight) {
             this.dy = 0;
         }
         if (this.y + this.width <= 0) {
@@ -80,7 +84,67 @@ function animate() {
     }
     gameFrame++;
     player.update();
+    if (keys.arrowRight.pressed) {
+        player.img = playerrun;
+        player.x += 4;
+    }
+    if (keys.arrowLeft.pressed) {
+        player.img = playeridle;
+        player.x -= 4;
+    }
+    if (keys.arrowUp.pressed) {
+        player.dy = -20;
+        framesforplayer = 1;
+        staggerFrames = 12
+        player.img = playerjump;
+        setTimeout(() => {
+            framesforplayer = 2;
+            staggerFrames = 8
+            player.img = playeridle
+        }, 800)
+    }
     requestAnimationFrame(animate);
 }
-
 animate();
+addEventListener("keydown", (e) => {
+    switch (e.key) {
+        case "ArrowUp":
+            staggerFrames = 20;
+            framesforplayer = 9;
+            keys.arrowUp.pressed = true;
+            player.img = playerjump
+            break;
+        case "ArrowRight":
+            staggerFrames = 4;
+            framesforplayer = 21
+            keys.arrowRight.pressed = true;
+            break;
+        case "ArrowLeft":
+            keys.arrowLeft.pressed = true;
+            break;
+    }
+})
+
+addEventListener("keyup", (e) => {
+    switch (e.key) {
+        case "ArrowUp":
+            staggerFrames = 6;
+            framesforplayer = 2
+            keys.arrowUp.pressed = false;
+            player.img = playeridle
+            player.dy = 15;
+            break;
+        case "ArrowLeft":
+            staggerFrames = 6;
+            framesforplayer = 2;
+            keys.arrowLeft.pressed = false;
+            player.img = playeridle;
+            break;
+        case "ArrowRight":
+            staggerFrames = 6;
+            framesforplayer = 2
+            keys.arrowRight.pressed = false;
+            player.img = playeridle
+            break;
+    }
+})

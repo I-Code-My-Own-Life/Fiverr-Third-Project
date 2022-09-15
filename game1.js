@@ -308,12 +308,6 @@ function animate() {
         enemies[i].attack()
     }
     // explosion1.explode()
-    if (explosion1.width > 250) {
-        console.log(explosion1)
-        delete explosion1.img
-        delete explosion1.width
-        delete explosion1.height
-    }
     tile.render();
     tile1.render();
     tile2.render();
