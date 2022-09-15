@@ -4,6 +4,11 @@ canvas.height = innerHeight;
 canvas.width = innerWidth;
 let scoreElem = document.querySelector("h1");
 let heading = document.querySelector("h2");
+let bg = document.getElementById('bg3');
+let jump = document.getElementById("jump")
+let hit = document.getElementById("hit");
+let shoot = document.getElementById("shoot");
+let gameover = document.getElementById('gameover')
 let transparentballs = [];
 let sp = false;
 let particleCount = 45;
@@ -218,6 +223,7 @@ let y = 10;
 let arrow;
 let transparentball;
 addEventListener("click", (e) => {
+    shoot.play()
     let angle = Math.atan2(e.clientY - player.y, e.clientX - player.x)
     let dx = Math.cos(angle) * 12;
     let dy = Math.sin(angle) * 12;
@@ -230,6 +236,8 @@ addEventListener("click", (e) => {
 })
 let op = 1;
 function animate() {
+    bg.play()
+    bg.loop = true;
     c.drawImage(background, 0, 0,innerWidth,innerHeight);
     setTimeout(()=>{
         op -= 0.01;
@@ -276,6 +284,7 @@ function animate() {
                     arrows[i].x <= targets[j].x + targets[j].width &&
                     arrows[i].y + arrows[i].height >= targets[j].y &&
                     arrows[i].y <= targets[j].y + targets[j].height) {
+                    hit.play()
                     sp = true;
                     score++;
                     arrows.splice(i, 1)
@@ -292,6 +301,7 @@ function animate() {
                     transparentballs[i].x <= targets[j].x + targets[j].width &&
                     transparentballs[i].y + transparentballs[i].height >= targets[j].y &&
                     transparentballs[i].y <= targets[j].y + targets[j].height) {
+                    hit.play()
                     sp = true;
                     score++;
                     transparentballs.splice(i, 1)

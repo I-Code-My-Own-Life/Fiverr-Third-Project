@@ -4,6 +4,12 @@ canvas.height = innerHeight;
 canvas.width = innerWidth;
 let con = document.querySelector('.container');
 let heading = document.querySelector('h1');
+let bg = document.getElementById('bg1');
+let jump = document.getElementById("jump")
+let hit = document.getElementById("hit");
+let shoot = document.getElementById("shoot");
+let gameover = document.getElementById('gameover');
+// bg.play()
 // Here we are going to make an array of our tiles : 
 let tiles = [];
 let arrows = [];
@@ -264,16 +270,21 @@ class Particle {
 let particle;
 let op = 1;
 function animate() {
+    bg.play();
     console.log(hited)
     // console.log(player.y,enemy2.y)
-    if(hited > 30){
-        location.href = "gamover.html"
+    if (hited > 30) {
+        setTimeout(() => {
+            location.href = "gamover.html"
+        }, 800)
+        bg.volume = 0.1
+        gameover.play()
     }
-    c.drawImage(background, 0, 0,innerWidth,innerHeight);
-    setTimeout(()=>{
+    c.drawImage(background, 0, 0, innerWidth, innerHeight);
+    setTimeout(() => {
         op -= 0.01;
         heading.style.opacity = `${op}`
-    },1000)
+    }, 1000)
     // arrows.x = player.x
     // arrows.y = player.y  
     if (gameFrame % staggerFrames == 0) {
@@ -313,7 +324,7 @@ function animate() {
     tile2.render();
     door.appear();
     for (let i = 0; i < particles.length; i++) {
-        if(!destroyed || !destroyed || !destroyed2){
+        if (!destroyed || !destroyed || !destroyed2) {
             particles[i].spawnParticles()
         }
     }
@@ -372,6 +383,7 @@ function animate() {
 
     for (let i = 0; i < arrows.length; i++) {
         if (arrows[i].x != undefined) {
+            // hit.play()
             if (arrows[i].x + arrows[i].width >= enemy2.x &&
                 arrows[i].x <= enemy2.x + enemy2.width &&
                 arrows[i].y + arrows[i].height >= enemy2.y &&
@@ -380,6 +392,7 @@ function animate() {
                 h++;
                 enemy2.x += 40
                 // 3rd Number enemy : 
+                hit.play()
                 if (h > 2) {
                     destroyed2 = true;
                     for (let i = 0; i < particleCount; i++) {
@@ -395,12 +408,14 @@ function animate() {
         }
         // 1st Number enemy : 
         if (arrows[i].x != undefined) {
+            // hit.play()
             if (arrows[i].x + arrows[i].width >= enemy1.x &&
                 arrows[i].x <= enemy1.x + enemy1.width &&
                 arrows[i].y + arrows[i].height >= enemy1.y &&
                 arrows[i].y <= enemy1.y + enemy1.height) {
                 h1++;
                 enemy1.x += 40
+                hit.play()
                 if (h1 > 2) {
                     destroyed1 = true;
                     for (let i = 0; i < particleCount; i++) {
@@ -417,12 +432,14 @@ function animate() {
         }
         // 2nd Number enemy : 
         if (arrows[i].x != undefined) {
+            // hit.play()
             if (arrows[i].x + arrows[i].width >= enemy.x &&
                 arrows[i].x <= enemy.x + enemy.width &&
                 arrows[i].y + arrows[i].height >= enemy.y &&
                 arrows[i].y <= enemy.y + enemy.height) {
                 h2++;
                 enemy.x += 40
+                hit.play()
                 if (h2 > 2) {
                     destroyed = true;
                     for (let i = 0; i < particleCount; i++) {
@@ -443,14 +460,15 @@ function animate() {
             enemyarrows[i].x <= player.x + player.width &&
             enemyarrows[i].y + enemyarrows[i].height >= player.y &&
             enemyarrows[i].y <= player.y + player.height) {
-                hited += 1
-                player.x -= 5
-            }
+            hit.play()
+            hited += 1
+            player.x -= 5
+        }
     }
     if (player.x + player.width >= door.x &&
         player.x <= door.x + door.width &&
         player.y + player.height >= door.y &&
-        player.y <= door.y + door.height) {
+        player.y <= door.y + door.height && destroyed && destroyed1 && destroyed2) {
         location.href = "level2.html";
     }
     if (keys.arrowRight.pressed) {
@@ -481,6 +499,7 @@ let arrow;
 addEventListener("keydown", (e) => {
     switch (e.key) {
         case " ":
+            shoot.play();
             let dx = 20;
             let angle = "angle";
             framesforplayer = 21;
@@ -489,6 +508,8 @@ addEventListener("keydown", (e) => {
             arrows.push(new Arrow(arrowimg, player.x, player.y, dx, 0, 100, 100, 1, angle))
             break;
         case "ArrowUp":
+            jump.play()
+            bg.volume = 0.8;
             staggerFrames = 20;
             framesforplayer = 9;
             keys.arrowUp.pressed = true;
@@ -512,6 +533,7 @@ addEventListener("keyup", (e) => {
             player.img = playeridle
             break;
         case "ArrowUp":
+            bg.volume = 1.0
             staggerFrames = 6;
             framesforplayer = 2
             keys.arrowUp.pressed = false;
@@ -545,23 +567,23 @@ addEventListener("resize", () => {
 //     arrows.push(new Arrow(arrowimg,canvas.width / 2,canvas.height/2,dx,dy,100,100,1,angle))
 //     console.log(player.y)
 // })
-let r = [1,2,3,4,5,6]
-setInterval(()=>{
+let r = [1, 2, 3, 4, 5, 6]
+setInterval(() => {
     let rand = r[Math.floor(Math.random() * r.length)]
     let rand1 = r[Math.floor(Math.random() * r.length)]
-    if(rand == 1 || rand == 4){
-        if(!destroyed){
-            enemyarrows.push(new Arrow(arrowenemyimg,enemy.x,enemy.y,-20,10,100,100,1,1));
+    if (rand == 1 || rand == 4) {
+        if (!destroyed) {
+            enemyarrows.push(new Arrow(arrowenemyimg, enemy.x, enemy.y, -20, 10, 100, 100, 1, 1));
         }
     }
-    if(rand == 2 || rand == 5){
-        if(!destroyed1){
-            enemyarrows.push(new Arrow(arrowenemyimg,enemy1.x,enemy1.y,-20,10,100,100,1,1));
+    if (rand == 2 || rand == 5) {
+        if (!destroyed1) {
+            enemyarrows.push(new Arrow(arrowenemyimg, enemy1.x, enemy1.y, -20, 10, 100, 100, 1, 1));
         }
     }
-    if(rand == 3 || rand == 6){
-        if(!destroyed2){
-            enemyarrows.push(new Arrow(arrowenemyimg,enemy2.x,enemy2.y,-20,10,100,100,1,1));
+    if (rand == 3 || rand == 6) {
+        if (!destroyed2) {
+            enemyarrows.push(new Arrow(arrowenemyimg, enemy2.x, enemy2.y, -20, 10, 100, 100, 1, 1));
         }
     }
-},3000)
+}, 3000)

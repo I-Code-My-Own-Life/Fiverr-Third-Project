@@ -2,8 +2,16 @@ let canvas = document.getElementById("canvas2");
 let c = canvas.getContext('2d');
 canvas.height = innerHeight;
 canvas.width = innerWidth;
+let bg = document.getElementById('bg4');
+let jump = document.getElementById("jump")
+let hit = document.getElementById("hit");
+let shoot = document.getElementById("shoot");
+let gameover = document.getElementById('gameover')
+let push = false;
 let arrows = [];
 let targets = [];
+let particles = [];
+let colors = ["red", "blue", "gray", "green", "purple", "black", "pink", "yelllow"]
 let background = new Image();
 background.src = "bg6.jpg";
 let playeridle = new Image();
@@ -16,7 +24,8 @@ let playershoot = new Image();
 playershoot.src = "playershoot.png";
 let arrowimg = new Image();
 arrowimg.src = "arrow.png";
-let targetCount = 5;
+let targetCount = 3;
+let particleCount = 45;
 let gameFrame = 0;
 let frameX = 0;
 let frameY = 0;
@@ -24,7 +33,7 @@ let staggerFrames = 6;
 let framesforplayer = 2;
 const playeridlewidth = 1024;
 const playeridleheight = 1024;
-
+let sp = false;
 class Player {
     constructor(img, x, y, width, height, dx, dy) {
         this.img = img;
@@ -55,8 +64,40 @@ class Player {
         }
     }
 }
+class Particle {
+    constructor(x, y, radius, dx, dy, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius
+        this.dx = dx;
+        this.dy = dy;
+        this.color = color
+    }
+    makeParticle() {
+        c.beginPath()
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        c.fillStyle = this.color;
+        c.fill()
+        c.stroke()
+        c.closePath();
+    }
+    spawnParticles() {
+        this.makeParticle();
+        this.x += this.dx;
+        this.x -= this.dy;
+        this.y -= this.dy;
+        this.x += this.dy;
+        if (this.radius > 0) {
+            this.radius -= 0.05
+        }
+        if (this.radius <= 0 || this.radius < 1 || this.x > innerWidth || this.y > innerHeight) {
+            particles.splice(particles.indexOf(this), 1)
+        }
+    }
+}
+let particle;
 class Arrow {
-    constructor(img, x, y, dx, dy, width, height, dir, angle) {
+    constructor(img,x,y, dx, dy, width, height, dir, angle) {
         this.img = img;
         this.x = x;
         this.y = y;
@@ -80,20 +121,45 @@ class Arrow {
     }
 }
 class Target {
-    constructor(x, y, radius, dx, dy){
+    constructor(x, y, radius, dx, dy,color){
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.dx = dx;
         this.dy = dy;
+        this.color = color
     }
     spawn() {
         c.beginPath()
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        c.arc(this.x, this.y,this.radius,0,Math.PI * 2,false);
+        // c.arc(this.x + 100, this.y,this.radius,0,Math.PI * 2,false);
+        c.fillRect(this.x + 10,this.y,this.width,this.height)
         c.fillStyle = this.color;
         c.fill()
         c.stroke()
         c.closePath();
+    }
+    move() {
+        this.spawn()
+        this.y += this.dy;
+    }
+}
+class Rect {
+    constructor(x, y,width,height,dx, dy){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.dx = dx;
+        this.dy = dy;
+    }
+    spawn() {
+        c.beginPath()
+        // c.arc(this.x, this.y,this.radius,0,Math.PI * 2,false);
+        // c.arc(this.x + 100, this.y,this.radius,0,Math.PI * 2,false);
+        c.fillRect(this.x,this.y,this.width,this.height)
+        // c.closePath();
+        c.stroke()
     }
     move() {
         this.spawn()
@@ -125,8 +191,11 @@ addEventListener("resize", () => {
 });
 let player = new Player(playeridle, 20, 10, 120, 120, 0, 20);
 function animate() {
+    // arrow.x += arrow.dx;
+    bg.play()
+    bg.loop = true;
     c.drawImage(background, 0, 0,innerWidth,innerHeight);
-    console.log(arrows);
+    // console.log(arrows);
     if (gameFrame % staggerFrames == 0) {
         if (frameX < framesforplayer) {
             frameX++;
@@ -139,10 +208,47 @@ function animate() {
     player.update();
     for (let i = 0; i < arrows.length; i++) {
         arrows[i].throw()
-        if (arrows[i].x > innerWidth) {
-            arrows.splice(i, 1)
+        if(arrows[i].x > innerWidth){
+            arrows.splice(i,1)
+        }
+        for (let j = 0; j < targets.length; j++) {
+            if (arrows[i] != undefined && targets[j] != undefined) {
+                // console.log(targets[j].x)
+                if (arrows[i].x + arrows[i].width >= targets[j].x &&
+                    arrows[i].x <= targets[j].x + targets[j].width &&
+                    arrows[i].y + arrows[i].height >= targets[j].y &&
+                    arrows[i].y <= targets[j].y + targets[j].height) {
+                        hit.play()
+                    sp = true;
+                    // score++;
+                    arrows.splice(i, 1)
+                    targets.splice(j, 1)
+                    console.log("jdfjd")
+                }
+                // console.log(arrows[i].x,targets[j].x)
+            }
         }
     }
+    if(sp){
+        for (let i = 0; i < particleCount; i++) {
+            let radius = 3;
+            let dx = randomIntFromInterval(-25, 25);
+            let dy = randomIntFromInterval(-20, 20);
+            particles.push(new Particle(canvas.width / 2 + 100, canvas.height/2, radius, dx, dy, colors[Math.floor(Math.random() * colors.length)]))
+        }
+        sp = false;
+    }
+    for (let i = 0; i < particles.length; i++) {
+        console.log(particles)
+        particles[i].spawnParticles()
+    }
+    if(push){
+        arrows.push(new Arrow(arrowimg,0,player.y,20,10,100,100,1,"angle"))
+            push = false;
+        }
+        if(arrows[0] != undefined){
+            // console.log(arrows[0].x)
+        }
     for(let i = 0; i < targets.length; i++){
         targets[i].move()
     }
@@ -171,12 +277,15 @@ animate();
 addEventListener("keydown", (e) => {
     switch (e.key) {
         case " ":
+            shoot.play()
             let dx = 20;
             let angle = "angle";
             framesforplayer = 21;
             staggerFrames = 3;
             player.img = playershoot;
-            arrows.push(new Arrow(arrowimg, player.x, player.y, dx, 0, 100, 100, 1, angle))
+            // console.log(player.x,player.y)
+            push = true;
+            // console.log(arrows)
             break;
         case "ArrowUp":
             staggerFrames = 20;
@@ -223,15 +332,28 @@ addEventListener("keyup", (e) => {
             break;
     }
 })
-let arr = [0]
+let arr = [0,1]
 setInterval(() => {
     for(let i = 0; i < targetCount; i++){
         let x = randomIntFromInterval(400, innerWidth)
-        let y = 0
-        let radius = randomIntFromInterval(6,12)
+        let r = arr[Math.floor(Math.random() * arr.length)]
+        let y; 
+        let dy;
+        if(r == 0){
+            y = innerHeight
+            // y = 100
+            dy = randomIntFromInterval(-8,-15) 
+        }
+        else if(r == 1){
+            y = 0
+            // y = 500
+            dy = randomIntFromInterval(8,15)
+        }
+        // let radius = randomIntFromInterval(6,12)
+        let width = randomIntFromInterval(25,40)
+        let height = randomIntFromInterval(25,40)
         let dx = randomIntFromInterval(8,15)
-        let dy   = randomIntFromInterval(8,15)
-        targets.push(new Target(x,y,radius,dx,dy));
+        targets.push(new Rect(x,y,width,height,dx,dy));
     }
-    console.log(targets)
+    // console.log(targets)
 }, 2000);
