@@ -133,7 +133,11 @@ class Player {
         //     this.dy = 0;
         // }
         if (this.y + this.height > innerHeight) {
-            location.href = "gamover.html"
+            setTimeout(() => {
+                location.href = "gamover.html"
+            }, 800)
+            bg.volume = 0.1
+            gameover.play()
             // this.dy = 0;
         }
         if (this.y + this.width <= 0) {
