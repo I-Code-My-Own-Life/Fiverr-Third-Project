@@ -24,19 +24,19 @@ let targets = [];
 let particles = [];
 let colors = ["red", "blue", "gray", "green", "purple", "black", "pink", "yelllow"]
 let background = new Image();
-background.src = "bg1.png"
+background.src = "/Sprites/bg1.png"
 let playeridle = new Image();
-playeridle.src = "playeridle.png"
+playeridle.src = "/Sprites/playeridle.png"
 let playerjump = new Image();
-playerjump.src = "playerjump.png"
+playerjump.src = "/Sprites/playerjump.png"
 let playerrun = new Image();
-playerrun.src = "playerrun.png"
+playerrun.src = "/Sprites/playerrun.png"
 let doorimg = new Image();
-doorimg.src = "door.png"
+doorimg.src = "/Sprites/door.png"
 let arrowimg = new Image();
-arrowimg.src = "arrow.png";
+arrowimg.src = "/Sprites/arrow.png";
 let ballimg = new Image();
-ballimg.src = "ball.png";
+ballimg.src = "/Sprites/ball.png";
 let score = 0;
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
