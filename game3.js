@@ -40,7 +40,7 @@ class Player {
             keys.arrowUp.pressed = false
             this.dy = 0;
         }
-        if (this.y + this.height > innerHeight) {
+        if (this.y + this.height > innerHeight - 160){
             this.dy = 0;
         }
         if (this.y + this.width <= 0) {
