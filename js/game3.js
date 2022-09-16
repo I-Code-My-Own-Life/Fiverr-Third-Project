@@ -243,7 +243,7 @@ function animate() {
         particles[i].spawnParticles()
     }
     if(push){
-        arrows.push(new Arrow(arrowimg,0,player.y,20,10,100,100,1,"angle"))
+        arrows.push(new Arrow(arrowimg,player.x,player.y,20,10,100,100,1,"angle"))
             push = false;
         }
         if(arrows[0] != undefined){
