@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You won the game.</title>
+    <style>
+        body{
+            overflow: hidden;
+            box-sizing: border-box;
+            background-color: black;
+        }
+        *{
+            margin:0;
+            padding: 0;
+        }
+        h1{
+            margin: 25%;
+            text-align: center;
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            color: white;
+            /* animation: big 0.5s ease 0.1s infinite forwards; */
+        }
+        @keyframes big {
+            from{
+                font-size: 10px;
+            }
+            to{
+                font-size: 60px;
+            }
+        }
+        #btn{
+            background-color: blue;
+            color: white;
+            height: 60px;
+            width: 200px;
+            border: 2px solid red;
+            border-radius:10px;
+        }
+        #btn:hover{
+            cursor: pointer;
+            background-color: transparent;
+            transition: 0.5s all ease-out;
+        }
+        .container{
+            position: absolute;
+            bottom: 100px;
+            left: 40%;
+        }
+    </style>
+</head>
+<body>
+    <audio id="wingame" src="Music/wingame.mp3"></audio>
+    <!-- <audio id="bg2" src="Music/bg2.mp3"></audio> -->
+    <h1>You won the game.</h1>
+    <div class="container">
+        <button id="btn">Go back to Level 1</button>
+    </div>
+</body>
+<script>
+    let winningMusic = document.getElementById("wingame")
+    let h1 = document.querySelector("h1");
+    h1.style.fontSize = 0;
+    let btn = document.getElementById("btn");
+    btn.addEventListener("click",()=>{
+        location.href = "index.html"
+    })
+    let fontSize = 0;
+    function animate(){
+        requestAnimationFrame(animate);
+        if(fontSize < 67){
+            fontSize ++
+        }
+        if(fontSize == 67){
+            h1.style.color = "red"
+        }
+        h1.style.fontSize = `${fontSize}px`
+    }
+    animate();
+    winningMusic.play()
+</script>
+</html>

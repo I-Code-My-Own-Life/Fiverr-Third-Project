@@ -2,6 +2,8 @@ let canvas = document.getElementById("canvas2");
 let c = canvas.getContext('2d');
 canvas.height = innerHeight;
 canvas.width = innerWidth;
+let scoreElem = document.getElementById("score");
+let score = 0;
 let bg = document.getElementById('bg4');
 let jump = document.getElementById("jump")
 let hit = document.getElementById("hit");
@@ -191,6 +193,9 @@ addEventListener("resize", () => {
 });
 let player = new Player(playeridle, 20, 10, 120, 120, 0, 20);
 function animate() {
+    if(score == 10){
+        location.href = "win.html"
+    }
     // arrow.x += arrow.dx;
     bg.play()
     bg.loop = true;
@@ -220,7 +225,8 @@ function animate() {
                     arrows[i].y <= targets[j].y + targets[j].height) {
                         hit.play()
                     sp = true;
-                    // score++;
+                    score++;
+                    scoreElem.innerText = score
                     arrows.splice(i, 1)
                     targets.splice(j, 1)
                     console.log("jdfjd")
@@ -355,5 +361,4 @@ setInterval(() => {
         let dx = randomIntFromInterval(8,15)
         targets.push(new Rect(x,y,width,height,dx,dy));
     }
-    // console.log(targets)
 }, 2000);
